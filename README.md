@@ -11,3 +11,4 @@ ADD
 
 https://github.com/samanthalee123/Data_Course_BARBER
 Hi Dan
+This README file contains information about my uploaded assignments
