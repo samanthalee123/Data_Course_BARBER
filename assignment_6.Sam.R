@@ -4,7 +4,7 @@ dat0<-read_csv("./Data/BioLog_Plate_Data.csv")
 
 #clean data into long form.
 
-dat1<-dat0 %>% 
+dat1<-dat %>% 
   pivot_longer(names_to = "time", values_to = "absorbance", 
                cols = starts_with("Hr"),names_prefix = "Hr_") %>%
   mutate(time= as.numeric(time))
@@ -51,14 +51,15 @@ library(lubridate)
 
 
 dat1 %>% 
-  filter(Substrate == "Itonic Acid") %>% 
-  group_by(time,`Sample ID`,Dilution) %>% 
-  summarize(Mean_Absorbance = mean(absorbance)) %>% 
-  ggplot(aes(time,Mean_Absorbance, color = `Sample ID`))+
-  geom_line()+
-  facet_wrap(~Dilution)+
-  transition_reveal(time)
-  
+  select(`Sample ID`,time, absorbance,Rep) %>% 
+  group_by("Itaconic Acid") %>% 
+  summarize(absorbance, #N= the new column we made n() the function for telling us number we want to observe. 
+            Mean_absorbance= mean(absorbance),
+            time=time,
+            Rep=Rep ) %>% 
+  ggplot(aes(time,Mean_absorbance, color= 'Sample ID'))+
+  geom_point()+
+  facet_wrap(~"Rep")
 
 
   
