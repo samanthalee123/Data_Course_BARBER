@@ -1,0 +1,106 @@
+---
+title: "assignment 9"
+author: "Samantha Barber"
+date: "2022-11-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message =FALSE)
+library(tidyverse)
+library(janitor)
+library(modelr)
+library(easystats)
+library(broom)
+library(AICcmodavg)
+library(knitr)
+
+```
+
+## Time Perception
+
+This is my personal data that I gathered from people ages 3-62. I measured their heart rate, age, and the time they felt was 1 minute. The graph below is a quick look at our data showing as age increases, so does the perception of 1 minute. 
+
+
+I also added a model to summarize our experiment. We found that on average every year we get older our perception of 1 minute increases by 0.86 seconds, our Pvalue also suggests that age is a significant factor in time perception. 
+
+```{r dat,echo=FALSE}
+dat<-readxl::read_excel("./time_perception.xlsx")
+dat %>% 
+  ggplot(aes(age,seconds_guessed))+
+  geom_point()+
+  geom_smooth(se=FALSE)+
+  facet_wrap(~sex)
+```
+
+
+```{r}
+mod1<-glm(data = dat,
+   formula = seconds_guessed ~ age)
+summary(mod1)
+```
+
+
+## Older  participants.
+It was thought that the older we get, the faster time goes by for us. Below is a graph of participants that I measured 30 years and older to determine if the majority of these participants perceived a minute to be longer than 60 seconds. 
+
+```{r}
+dat %>% 
+  filter(age>30) %>% 
+  ggplot(aes(age,seconds_guessed))+
+  geom_boxplot()+
+  theme_classic()+
+  ylab("Seconds Guessed")+ xlab("Age")+ggtitle( "30 and older")
+```
+The majority of guesses were well over 60 seconds! lets see how this measures against the younger group of participants.
+
+## Younger Participants
+
+```{r}
+dat %>% 
+  filter(age<=29) %>% 
+  ggplot(aes(age,seconds_guessed))+
+  geom_boxplot()+
+  theme_classic()+
+  ylab("Seconds Guessed")+ xlab("Age")+ggtitle( "Younger than 30")
+```
+In this graph, the kids who are younger than 30, mostly measured below 60 seconds. Following our idea that time moves quickly the older we get, and slowly the younger we are. 
+
+Not only did we measure time, but heart rate to see if it had any effect on peoples perception of time. 
+
+ ##Heart rate and age model. 
+
+```{r}
+anova<-aov(seconds_guessed~ age + heart_rate, data = dat)
+summary(anova)
+
+```
+
+
+ accoding to this model, we see age is significant to the guesses, but heart rate is not significant. In the next model, we will combine heart rate and age, and see how they affect eachother. 
+
+```{r}
+anova2<-aov(seconds_guessed~ age * heart_rate, data = dat)
+
+summary(anova2)
+```
+
+
+This model is showing one star next to the combination of age and heart rate, but still not as significant as age alone on this experiment.
+
+
+
+## conclusion
+
+In conclusion we have found that age does seem to have an effect on how we perceive time, however our heart rate seems to have no effect on the matter. 
+
+
+here is a link <https://www.scientificamerican.com/article/why-does-time-seem-to-speed-up-with-age/> to an article about age and time perception.
+
+
+
+
+
+
+
+
