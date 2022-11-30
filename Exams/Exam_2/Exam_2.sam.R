@@ -6,8 +6,8 @@ library(easystats)
 
 
 #1 read data
-dat1<-read_csv("unicef-u5mr.csv") %>% 
-  clean_names()
+dat1<-read_csv("Data/unicef-u5mr.csv")
+dat1<-janitor::clean_names(dat1)
 
 #2 clean and tidy data
 dat2<-dat1 %>% 
@@ -25,7 +25,7 @@ cleandat %>%
   theme_bw()
 
 #4 saved plot as BARBER_1.png in figures_exam2 folder.
-
+ggsave("BARBER_plot_1.png")
 #5 plot mean deaths for all countries
 mean<-cleandat %>% 
   group_by(continent,year) %>% 
@@ -38,7 +38,8 @@ mean %>%
   theme_bw()
   
 #6 saved figure as BARBER_plot_2 in figures_exam2 folder. 
-
+ 
+ggsave("BARBER_plot_2.png")
 
 #7 create 3 models. 
 
@@ -71,12 +72,7 @@ gather_predictions(cleandat, mod1,mod2,mod3) %>%
   theme_bw()
 
 
-#10 bonus:
-
-add_predictions(cleandat,mod3,type= "response") %>% 
-  filter(!is.na(deaths))
 
 
-predict(mod3,data.frame(year=2020,
-                        country_name="Ecuador"),
-                        type = "response")
+
+
